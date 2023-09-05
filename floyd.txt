@@ -1,62 +1,67 @@
-#include <iostream>
+
+#include <bits/stdc++.h>
 using namespace std;
 
-class ShortestPathCalculator {
-private:
-    int a[10][10];
-    int n;
+#define V 4
 
-    int min(int x, int y) {
-        if (x < y) {
-            return x;
-        } else {
-            return y;
-        }
-    }
 
-public:
-    ShortestPathCalculator() {
-        n = 0;
-    }
+#define INF 99999
 
-    void inputMatrix() {
-        cout << "Enter the no. of vertices:\t";
-        cin >> n;
 
-        cout << "Enter the cost matrix:\n";
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= n; j++) {
-                cin >> a[i][j];
-            }
-        }
-    }
+void printSolution(int dist[][V]);
 
-    void floyds() {
-        for (int k = 1; k <= n; k++) {
-            for (int i = 1; i <= n; i++) {
-                for (int j = 1; j <= n; j++) {
-                    a[i][j] = min(a[i][j], a[i][k] + a[k][j]);
-                }
-            }
-        }
-    }
 
-    void displayMatrix() {
-        cout << "\nAll pair shortest path matrix is:\n";
-        for (int i = 1; i <= n; i++) {
-            for (int j = 1; j <= n; j++) {
-                cout << a[i][j] << "\t";
-            }
-            cout << "\n\n";
-        }
-    }
-};
+void floydWarshall(int dist[][V])
+{
 
-int main() {
-    ShortestPathCalculator calculator;
-    calculator.inputMatrix();
-    calculator.floyds();
-    calculator.displayMatrix();
+	int i, j, k;
 
-    return 0;
+	for (k = 0; k < V; k++) {
+		
+		for (i = 0; i < V; i++) {
+			
+			for (j = 0; j < V; j++) {
+				
+				if (dist[i][j] > (dist[i][k] + dist[k][j])
+					&& (dist[k][j] != INF
+						&& dist[i][k] != INF))
+					dist[i][j] = dist[i][k] + dist[k][j];
+			}
+		}
+	}
+
+
+	printSolution(dist);
+}
+
+
+void printSolution(int dist[][V])
+{
+	cout << "The following matrix shows the shortest "
+			"distances"
+			" between every pair of vertices \n";
+	for (int i = 0; i < V; i++) {
+		for (int j = 0; j < V; j++) {
+			if (dist[i][j] == INF)
+				cout << "INF"
+					<< " ";
+			else
+				cout << dist[i][j] << " ";
+		}
+		cout << endl;
+	}
+}
+
+
+int main()
+{
+	
+	int graph[V][V] = { { 0, 5, INF, 10 },
+						{ INF, 0, 3, INF },
+						{ INF, INF, 0, 1 },
+						{ INF, INF, INF, 0 } };
+
+
+	floydWarshall(graph);
+	return 0;
 }
